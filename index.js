@@ -85,7 +85,7 @@ const retryOperation = async (operation, retries = 30, delay = 50000) => {
             await new Promise(resolve => setTimeout(resolve, delay));
         }
     }
-};
+}
 
 cron.schedule('* * * * *', async () => {
     try {
@@ -102,7 +102,7 @@ cron.schedule('* * * * *', async () => {
     } catch (error) {
         console.error('Cron job error:', error);
     }
-});
+})
 
 cron.schedule('* * * * *', async () => {
     try {
@@ -121,4 +121,4 @@ cron.schedule('* * * * *', async () => {
     } catch (error) {
         console.error('Cron job error:', error);
     }
-});
+})
