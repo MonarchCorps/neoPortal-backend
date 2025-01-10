@@ -1,5 +1,5 @@
 const allowedOrigins = [
-    'http://localhost:3500',
-    'http://localhost:5173'
+    'https://neo-portal-frontend.vercel.app',
+    'https://neoportal-backend.onrender.com'
 ]
 module.exports = allowedOrigins
