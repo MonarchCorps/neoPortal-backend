@@ -62,6 +62,10 @@ app.use('/school-fetch-teachers', require('./routes/fetchTeachersFromSchool'))
 app.use('/school-edit-teacher', require('./routes/editTeacherFromSchool'))
 app.use('/school-delete-teacher', require('./routes/deleteTeacherFromSchool'))
 
+app.use('/save-question', require('./routes/saved/saveQuestion'))
+app.use('/unsave-question', require('./routes/saved/unsaveQuestion'))
+app.use('/get-saved-question', require('./routes/saved/getSavedQuestion'))
+
 mongoose.connection.once('open', () => {
     console.log('Connected to Database successfully');
     app.listen(PORT, () => {
