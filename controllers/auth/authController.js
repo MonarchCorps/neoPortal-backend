@@ -93,13 +93,13 @@ const handleRefreshToken = async (req, res) => {
             return res.sendStatus(400)
 
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-        if (user.username !== decoded.username)
+        if (user.name !== decoded.name)
             return res.sendStatus(403);
 
         const accessToken = jwt.sign(
             {
                 UserInfo: {
-                    username: user.username,
+                    name: user.name,
                     role: user.role
                 }
             },

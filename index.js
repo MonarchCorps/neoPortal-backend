@@ -66,6 +66,8 @@ app.use('/save-question', require('./routes/saved/saveQuestion'))
 app.use('/unsave-question', require('./routes/saved/unsaveQuestion'))
 app.use('/get-saved-question', require('./routes/saved/getSavedQuestion'))
 
+app.use('/check-token', require('./routes/checkAuth'))
+
 mongoose.connection.once('open', () => {
     console.log('Connected to Database successfully');
     app.listen(PORT, () => {
