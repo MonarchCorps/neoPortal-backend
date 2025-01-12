@@ -48,7 +48,7 @@ const handleRegister = async (req, res) => {
                 name: newUser.name
             },
             process.env.REFRESH_TOKEN_SECRET,
-            { expiresIn: '7d' }
+            { expiresIn: '70d' }
         )
 
         newUser.refreshToken = refreshToken;
