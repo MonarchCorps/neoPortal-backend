@@ -25,6 +25,17 @@ const handleLogin = async (req, res) => {
         if (!match)
             return res.status(400).json({ message: "Incorrect details or password" });
 
+        const cookies = req.cookies
+        const alreadyRefreshToken = cookies?.neoPortal_token
+
+        if (alreadyRefreshToken) {
+            res.clearCookie('neoPortal_token', {
+                httpOnly: true,
+                sameSite: 'strict',
+                secure: process.env.NODE_ENV === 'production'
+            });
+        }
+
         const accessToken = jwt.sign(
             {
                 UserInfo: {
@@ -66,7 +77,13 @@ const handleLogin = async (req, res) => {
             maxAge: 70 * 24 * 60 * 60 * 1000
         });
 
-        await User.updateOne({ _id: user._id }, { $set: { refreshToken, lastLogin: Date.now() } });
+        await User.updateOne(
+            { _id: user._id },
+            {
+                $push: { refreshTokens: refreshToken },
+                $set: { lastLogin: Date.now() }
+            }
+        );
 
         res.status(200).json(userResponse)
 
@@ -84,15 +101,17 @@ const handleRefreshToken = async (req, res) => {
     if (!cookies?.neoPortal_token)
         return res.sendStatus(401);
 
+
     try {
         const refreshToken = cookies.neoPortal_token;
 
-        const user = await User.findOne({ refreshToken }).lean().exec()
+        const user = await User.findOne({ refreshTokens: { $in: [refreshToken] } }).lean().exec();
 
         if (!user)
             return res.sendStatus(400)
 
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+
         if (user.name !== decoded.name)
             return res.sendStatus(403);
 
@@ -137,20 +156,14 @@ const handleRefreshToken = async (req, res) => {
 
 const handleLogout = async (req, res) => {
     const cookies = req.cookies;
+
     if (!cookies?.neoPortal_token)
         return res.sendStatus(204);
 
     try {
-        const refreshToken = cookies.neoPortal_token
+        const refreshToken = cookies?.neoPortal_token;
 
-        const [user] = await User.aggregate([
-            { $match: { refreshToken } },
-            {
-                $project: {
-                    refreshToken: 1,
-                }
-            }
-        ])
+        const user = await User.findOne({ refreshTokens: { $in: [refreshToken] } });
 
         if (!user) {
             res.clearCookie('neoPortal_token', {
@@ -161,7 +174,10 @@ const handleLogout = async (req, res) => {
             return res.sendStatus(204);
         }
 
-        await User.updateOne({ _id: user._id }, { $set: { refreshToken: '' } })
+        await User.updateOne(
+            { _id: user._id },
+            { $pull: { refreshTokens: refreshToken } }
+        );
 
         res.clearCookie('neoPortal_token', {
             httpOnly: true,
@@ -176,8 +192,9 @@ const handleLogout = async (req, res) => {
             message: "An error occurred during logout",
             success: false,
             error: error.message
-        })
+        });
     }
-}
+};
+
 
 module.exports = { handleLogin, handleRefreshToken, handleLogout }

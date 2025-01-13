@@ -35,7 +35,8 @@ const userSchema = new Schema({
     state: String,
     qualification: String,
     licenseNo: String,
-    refreshToken: String,
+    refreshTokens: [String],
+    lastLogin: Date,
     createdFromSchool: {
         type: Boolean, default: false
     },
