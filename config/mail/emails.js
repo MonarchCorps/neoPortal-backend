@@ -18,7 +18,7 @@ const handleSendVerificationEmail = async (userEmail, verificationToken) => {
 
     try {
         await transporter.sendMail({
-            from: `Exam Portal <${process.env.EMAIL_USER}>`,
+            from: `Neo Portal <${process.env.EMAIL_USER}>`,
             to: `${userEmail}`,
             subject: `Verify your email`,
             html: VERIFICATION_EMAIL_TEMPLATE.replace("{verificationCode}", verificationToken),
@@ -36,7 +36,7 @@ const handleSendWelcomeEmail = async (userEmail, userName) => {
 
     try {
         await transporter.sendMail({
-            from: `Exam Portal <${process.env.EMAIL_USER}>`,
+            from: `Neo Portal <${process.env.EMAIL_USER}>`,
             to: userEmail,
             subject: `Welcome to Neo Portal`,
             html: WELCOME_EMAIL_TEMPLATE.replace("{userName}", userName),
@@ -49,27 +49,29 @@ const handleSendWelcomeEmail = async (userEmail, userName) => {
 };
 
 const handleSendPasswordResetEmail = async (userEmail, resetUrl) => {
+    const transporter = transporterData();
 
     try {
         await transporter.sendMail({
-            from: `Exam Portal <${process.env.EMAIL_USER}>`,
-            to: `${userEmail}`,
-            subject: `Reset your password`,
-            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace("{resetURL}", resetUrl),
-        })
+            from: `Neo Portal <${process.env.EMAIL_USER}>`,
+            to: userEmail,
+            subject: "Reset your password",
+            html: PASSWORD_RESET_REQUEST_TEMPLATE.replace(/{resetURL}/g, resetUrl),
+        });
 
         console.log(`Password reset email sent to ${userEmail}`);
     } catch (error) {
         console.error(`Failed to send password reset email to ${userEmail}:`, error.message);
     }
+};
 
-}
 
 const handleSendResetSuccessEmail = async (userEmail) => {
+    const transporter = transporterData();
 
     try {
         await transporter.sendMail({
-            from: `Exam Portal <${process.env.EMAIL_USER}>`,
+            from: `Neo Portal <${process.env.EMAIL_USER}>`,
             to: `${userEmail}`,
             subject: `Password reset successful`,
             html: PASSWORD_RESET_SUCCESS_TEMPLATE

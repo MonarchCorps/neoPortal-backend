@@ -41,7 +41,9 @@ const userSchema = new Schema({
         type: Boolean, default: false
     },
     assignedSubject: String,
-    assignedSchoolId: String
+    assignedSchoolId: String,
+    resetPasswordToken: String,
+    resetPasswordExpiresAt: Date
 }, {
     timestamps: true
 })

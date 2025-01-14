@@ -1,6 +1,8 @@
 const User = require("../../models/User")
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
+const { handleSendPasswordResetEmail, handleSendResetSuccessEmail } = require("../../config/mail/emails")
 
 const handleLogin = async (req, res) => {
     const { state, password } = req.body
@@ -197,4 +199,80 @@ const handleLogout = async (req, res) => {
 };
 
 
-module.exports = { handleLogin, handleRefreshToken, handleLogout }
+const handleForgetPassword = async (req, res) => {
+
+    const { email } = req.body
+
+    if (!email)
+        return res.status(400).json({ message: "Email is required" })
+
+    try {
+
+        const user = await User.findOne({ email }).exec()
+
+        if (!user)
+            return res.status(404).json({ message: "User not found" })
+
+        const resetToken = crypto.randomBytes(20).toString('hex')
+        const resetTokenExpiresAt = Date.now() + 1 * 60 * 60 * 1000 // 1hr
+
+        user.resetPasswordToken = resetToken
+        user.resetPasswordExpiresAt = resetTokenExpiresAt
+
+        await user.save()
+
+        await handleSendPasswordResetEmail(user.email, `${process.env.FRONTEND_URL}/reset-password/${resetToken}`)
+
+        res.status(200).json({ message: "Reset email sent!" })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error sending reset email",
+            success: false,
+            error: error.message
+        })
+    }
+
+}
+
+const handleResetPassword = async (req, res) => {
+
+    const { token } = req.params
+    if (!token)
+        return res.status(400).json({ message: "Reset token is required" })
+
+    const { password } = req.body
+    if (!password)
+        return res.status(400).json({ message: "Password is required" })
+
+    try {
+
+        const user = await User.findOne({
+            resetPasswordToken: token,
+            resetPasswordExpiresAt: { $gt: Date.now() }
+        })
+
+        if (!user)
+            return res.status(404).json({ message: "User not found" })
+
+        const hashedPassword = await bcrypt.hash(password, 10)
+
+        user.password = hashedPassword
+        user.resetPasswordToken = undefined
+        user.resetPasswordExpiresAt = undefined
+        await user.save()
+
+        await handleSendResetSuccessEmail(user.email)
+
+        res.status(200).json({ message: "Success email sent!" })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Error resetting password",
+            success: false,
+            error: error.message
+        })
+    }
+}
+
+module.exports = { handleLogin, handleRefreshToken, handleLogout, handleForgetPassword, handleResetPassword }
