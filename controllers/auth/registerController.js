@@ -51,7 +51,7 @@ const handleRegister = async (req, res) => {
             { expiresIn: '70d' }
         )
 
-        newUser.refreshToken = refreshToken;
+        newUser.refreshTokens.push(refreshToken)
         await newUser.save();
 
         res.cookie('neoPortal_token', refreshToken, {
