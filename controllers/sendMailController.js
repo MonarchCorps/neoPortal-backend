@@ -2,8 +2,8 @@ const { transporterData } = require("../config/transporter");
 
 const handleSendMail = async (req, res) => {
 
-    const { name, email, subject, content } = req.body
-    if (!name || !email || !content || !subject)
+    const { name, email, subject, content, phoneNumber } = req.body
+    if (!name || !email || !content || !subject || !phoneNumber)
         return res.status(400).json({ message: "All fields are required" })
 
     try {
