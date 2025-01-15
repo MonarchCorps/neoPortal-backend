@@ -6,7 +6,7 @@ const handleSendPartnerMail = async (req, res) => {
 
     if (!firstName || !lastName || !organizationName || !email || !phoneNumber || !content)
         return res.status(400).json({ message: "All fields are required" })
-
+    console.log(organizationName)
     try {
 
         const transporter = transporterData();
@@ -14,10 +14,8 @@ const handleSendPartnerMail = async (req, res) => {
         await transporter.sendMail({
             from: `${firstName} ${lastName} <${email}>`,
             to: `${process.env.EMAIL_USER}`,
-            organizationName,
-            phoneNumber,
             subject: 'Partner with us',
-            text: content
+            text: `Organization Name: ${organizationName}\nPhone Number: ${phoneNumber}\nContent: ${content}`
         })
 
         console.log(`Mail sent from ${email}`);
