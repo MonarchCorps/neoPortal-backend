@@ -36,6 +36,9 @@ app.use('/fetch-questions', require('./routes/fetchQuestions'))
 
 app.use('/check-token', require('./routes/checkAuth'))
 
+app.use('/book-appointment', require('./routes/bookAppointment'))
+app.use('/send-partner-mail', require('./routes/partnerMail'))
+
 app.use(verifyJWT)
 
 app.use('/upload/exam', require('./routes/uploadExam'))
