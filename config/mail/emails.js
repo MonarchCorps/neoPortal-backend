@@ -1,20 +1,8 @@
 const { VERIFICATION_EMAIL_TEMPLATE, PASSWORD_RESET_REQUEST_TEMPLATE, PASSWORD_RESET_SUCCESS_TEMPLATE, WELCOME_EMAIL_TEMPLATE } = require('./emailTemplates')
-const nodemailer = require('nodemailer')
-
-const transporterData = () => {
-    const transporter = nodemailer.createTransport({
-        host: process.env.SMTP_HOST,
-        port: parseInt(process.env.SMTP_PORT, 10),
-        secure: process.env.SMTP_SECURE == true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASSWORD
-        },
-    });
-    return transporter
-}
+const { transporterData } = require('../transporter');
 
 const handleSendVerificationEmail = async (userEmail, verificationToken) => {
+    const transporter = transporterData();
 
     try {
         await transporter.sendMail({
