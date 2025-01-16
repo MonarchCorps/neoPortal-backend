@@ -2,6 +2,7 @@ const User = require('../../models/User')
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { handleSendWelcomeEmail } = require('../../config/mail/emails')
+const ExamProgress = require('../../models/ExamProgress')
 
 const handleRegister = async (req, res) => {
 
@@ -31,6 +32,8 @@ const handleRegister = async (req, res) => {
             qualification: qualification,
             licenseNo: licenseNo,
         })
+
+        const examCount = await ExamProgress.find({ userId: newUser._id }).countDocuments()
 
         const accessToken = jwt.sign(
             {
@@ -76,7 +79,8 @@ const handleRegister = async (req, res) => {
             qualification: newUser.qualification,
             licenseNo: newUser.licenseNo,
             createdAt: newUser.createdAt,
-            profileImage: newUser.profileImage
+            profileImage: newUser.profileImage,
+            examCount: examCount
         }
 
         res.status(201).json(userResponse)

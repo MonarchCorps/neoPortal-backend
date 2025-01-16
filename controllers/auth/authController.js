@@ -3,6 +3,7 @@ const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const crypto = require('crypto')
 const { handleSendPasswordResetEmail, handleSendResetSuccessEmail } = require("../../config/mail/emails")
+const ExamProgress = require("../../models/ExamProgress")
 
 const handleLogin = async (req, res) => {
     const { state, password } = req.body
@@ -29,6 +30,8 @@ const handleLogin = async (req, res) => {
 
         const cookies = req.cookies
         const alreadyRefreshToken = cookies?.neoPortal_token
+
+        const examCount = await ExamProgress.find({ userId: user._id }).countDocuments()
 
         if (alreadyRefreshToken) {
             res.clearCookie('neoPortal_token', {
@@ -69,7 +72,8 @@ const handleLogin = async (req, res) => {
             licenseNo: user.licenseNo,
             createdAt: user.createdAt,
             profileImage: user.profileImage,
-            assignedSubject: user.assignedSubject
+            assignedSubject: user.assignedSubject,
+            examCount: examCount
         }
 
         res.cookie('neoPortal_token', refreshToken, {
@@ -117,6 +121,8 @@ const handleRefreshToken = async (req, res) => {
         if (user.name !== decoded.name)
             return res.sendStatus(403);
 
+        const examCount = await ExamProgress.find({ userId: user._id }).countDocuments()
+
         const accessToken = jwt.sign(
             {
                 UserInfo: {
@@ -142,11 +148,13 @@ const handleRefreshToken = async (req, res) => {
             licenseNo: user.licenseNo,
             createdAt: user.createdAt,
             profileImage: user.profileImage,
-            assignedSubject: user.assignedSubject
+            assignedSubject: user.assignedSubject,
+            examCount: examCount
         }
 
         res.status(200).json(userResponse)
     } catch (error) {
+        console.log(error)
         res.status(500).json({
             message: "Server Error",
             success: false,
