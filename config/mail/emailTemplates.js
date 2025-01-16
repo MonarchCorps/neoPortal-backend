@@ -10,7 +10,7 @@ const VERIFICATION_EMAIL_TEMPLATE = `
 
 <body
     style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="background: linear-gradient(to right, #791d18, #791d18); padding: 20px; text-align: center;">
+    <div style="background: linear-gradient(to right, #1a318f, #14266c); padding: 20px; text-align: center;">
         <h1 style="color: white; margin: 0;">Verify Your Email</h1>
     </div>
     <div
@@ -19,7 +19,7 @@ const VERIFICATION_EMAIL_TEMPLATE = `
         <p>Thank you for signing up! Your verification code is:</p>
         <div style="text-align: center; margin: 30px 0;">
             <span
-                style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #791d18;">{verificationCode}</span>
+                style="font-size: 32px; font-weight: bold; letter-spacing: 5px; color: #1a318f;">{verificationCode}</span>
         </div>
         <p>Enter this code on the verification page to complete your registration.</p>
         <p>This code will expire in 1 hour for security reasons.</p>
@@ -46,7 +46,7 @@ const WELCOME_EMAIL_TEMPLATE = `
 
 <body
     style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="background: linear-gradient(to right, #791d18, #791d18); padding: 20px; text-align: center;">
+    <div style="background: linear-gradient(to right, #1a318f, #14266c); padding: 20px; text-align: center;">
         <h1 style="color: white; margin: 0;">Welcome to Neo Portal</h1>
     </div>
     <div
@@ -77,7 +77,7 @@ const PASSWORD_RESET_SUCCESS_TEMPLATE = `
 
 <body
     style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
-    <div style="background: linear-gradient(to right, #791d18, #921528); padding: 20px; text-align: center;">
+    <div style="background: linear-gradient(to right, #1a318f, #14266c); padding: 20px; text-align: center;">
         <h1 style="color: white; margin: 0;">Password Reset Successful</h1>
     </div>
     <div
@@ -86,7 +86,7 @@ const PASSWORD_RESET_SUCCESS_TEMPLATE = `
         <p>We're writing to confirm that your password has been successfully reset.</p>
         <div style="text-align: center; margin: 30px 0;">
             <div
-                style="background-color: #791d18; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
+                style="background-color: #1a318f; color: white; width: 50px; height: 50px; line-height: 50px; border-radius: 50%; display: inline-block; font-size: 30px;">
                 ✓
             </div>
         </div>
@@ -127,7 +127,7 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
       padding: 20px;
     ">
     <div style="
-        background: linear-gradient(to right, #791d18, #921528);
+        background: linear-gradient(to right, #1a318f, #14266c);
         padding: 20px;
         text-align: center;
       ">
@@ -148,7 +148,7 @@ const PASSWORD_RESET_REQUEST_TEMPLATE = `
         <div style="margin: 30px 0">
             <div style="display: flex">
                 <a href="{resetURL}" style="
-              background-color: #791d18;
+              background-color: #1a318f;
               color: white;
               padding: 12px 20px;
               text-decoration: none;
