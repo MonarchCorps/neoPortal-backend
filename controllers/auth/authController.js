@@ -264,7 +264,7 @@ const handleResetPassword = async (req, res) => {
 
         await handleSendResetSuccessEmail(user.email)
 
-        res.status(200).json({ message: "Success email sent!" })
+        res.status(200).json({ message: "Password was reset" })
 
     } catch (error) {
         res.status(500).json({
